@@ -51,6 +51,14 @@ Editing happens in vim, not in a text field. Press **vim** (or double-click a no
 
 ---
 
+## Install
+
+Grab the `.dmg` (macOS) or `.deb` / `.AppImage` (Linux) from [Releases](https://github.com/jarryuser/iStickies/releases)
+
+macOS builds are ad-hoc signed, on first launch use right-click → Open
+
+---
+
 ## Prerequisites
 
 ### macOS

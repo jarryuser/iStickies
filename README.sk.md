@@ -51,6 +51,14 @@ Stickies je malá desktopová aplikácia na lepiace poznámky, ktoré žijú pri
 
 ---
 
+## Inštalácia
+
+Stiahni `.dmg` (macOS) alebo `.deb` / `.AppImage` (Linux) z [Releases](https://github.com/jarryuser/iStickies/releases)
+
+macOS buildy sú ad-hoc podpísané, pri prvom spustení použi pravý klik → Open
+
+---
+
 ## Predpoklady
 
 ### macOS

@@ -51,6 +51,14 @@ Bearbeitet wird in Vim, nicht in einem Textfeld. Drücke **vim** (oder doppelkli
 
 ---
 
+## Installation
+
+Lade `.dmg` (macOS) oder `.deb` / `.AppImage` (Linux) aus [Releases](https://github.com/jarryuser/iStickies/releases)
+
+macOS-Builds sind ad-hoc signiert, beim Erststart Rechtsklick → Öffnen nutzen
+
+---
+
 ## Voraussetzungen
 
 ### macOS

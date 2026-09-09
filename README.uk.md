@@ -51,6 +51,14 @@ Stickies - маленький застосунок для стікерів, що
 
 ---
 
+## Встановлення
+
+Забери `.dmg` (macOS) або `.deb` / `.AppImage` (Linux) з [Releases](https://github.com/jarryuser/iStickies/releases)
+
+macOS-збірки ad-hoc підписані, при першому запуску відкрий правим кліком → Open
+
+---
+
 ## Залежності
 
 ### macOS

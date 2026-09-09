@@ -51,6 +51,14 @@ Stickies - маленькое приложение для стикеров, жи
 
 ---
 
+## Установка
+
+Забери `.dmg` (macOS) или `.deb` / `.AppImage` (Linux) из [Releases](https://github.com/jarryuser/iStickies/releases)
+
+macOS-сборки ad-hoc подписаны, при первом запуске открой правым кликом → Open
+
+---
+
 ## Зависимости
 
 ### macOS
