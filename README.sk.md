@@ -51,15 +51,60 @@ Stickies je malá desktopová aplikácia na lepiace poznámky, ktoré žijú pri
 
 ---
 
+## Predpoklady
+
+### macOS
+
+Command Line Tools, Rust a Node
+
+```bash
+xcode-select --install
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+brew install node
+```
+
+### Ubuntu / Debian
+
+Systémový webview, toolchain prekladača a tray knižnice z apt
+
+```bash
+sudo apt update
+sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
+  libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Node 18+ cez [nvm](https://github.com/nvm-sh/nvm), fnm alebo nodejs.org
+
+### Fedora
+
+```bash
+sudo dnf install webkit2gtk4.1-devel openssl-devel curl wget file \
+  libxdo-devel libayatana-appindicator-gtk3-devel librsvg2-devel
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+### Arch
+
+```bash
+sudo pacman -S webkit2gtk-4.1 base-devel curl wget file openssl \
+  libappindicator-gtk3 librsvg
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Úplný zoznam podľa distribúcie je v [Tauri prerequisites guide](https://tauri.app/start/prerequisites/)
+
+---
+
 ## Začíname
 
 ```bash
 npm install
 npm run dev      # debug beh s hot reload
-npm run build    # → stickies.app + .dmg v src-tauri/target/release/bundle
+npm run build    # → iStickies.app + .dmg v src-tauri/target/release/bundle
 ```
 
-Vyžaduje Rust 1.97+, Node 18+ a Xcode Command Line Tools na macOS. Poznámky a nastavenia ležia v `~/Library/Application Support/com.dmytrofiliurskyi.stickies` (na Linuxe `~/.local/share/stickies`).
+Poznámky a nastavenia ležia v `~/Library/Application Support/com.dmytrofiliurskyi.stickies` (na Linuxe `~/.local/share/stickies`)
 
 ---
 

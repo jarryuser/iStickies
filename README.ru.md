@@ -51,15 +51,60 @@ Stickies - маленькое приложение для стикеров, жи
 
 ---
 
+## Зависимости
+
+### macOS
+
+Command Line Tools, Rust и Node
+
+```bash
+xcode-select --install
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+brew install node
+```
+
+### Ubuntu / Debian
+
+Системный webview, компилятор и tray-библиотеки из apt
+
+```bash
+sudo apt update
+sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
+  libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Node 18+ через [nvm](https://github.com/nvm-sh/nvm), fnm или nodejs.org
+
+### Fedora
+
+```bash
+sudo dnf install webkit2gtk4.1-devel openssl-devel curl wget file \
+  libxdo-devel libayatana-appindicator-gtk3-devel librsvg2-devel
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+### Arch
+
+```bash
+sudo pacman -S webkit2gtk-4.1 base-devel curl wget file openssl \
+  libappindicator-gtk3 librsvg
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Полный список по дистрибутивам - в [Tauri prerequisites guide](https://tauri.app/start/prerequisites/)
+
+---
+
 ## Начало работы
 
 ```bash
 npm install
 npm run dev      # debug-запуск с hot reload
-npm run build    # → stickies.app + .dmg в src-tauri/target/release/bundle
+npm run build    # → iStickies.app + .dmg в src-tauri/target/release/bundle
 ```
 
-Нужны Rust 1.97+, Node 18+ и Xcode Command Line Tools на macOS. Заметки и настройки лежат в `~/Library/Application Support/com.dmytrofiliurskyi.stickies` (на Linux `~/.local/share/stickies`).
+Заметки и настройки лежат в `~/Library/Application Support/com.dmytrofiliurskyi.stickies` (на Linux `~/.local/share/stickies`)
 
 ---
 

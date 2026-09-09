@@ -51,15 +51,60 @@ Editing happens in vim, not in a text field. Press **vim** (or double-click a no
 
 ---
 
+## Prerequisites
+
+### macOS
+
+Command Line Tools, Rust and Node
+
+```bash
+xcode-select --install
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+brew install node
+```
+
+### Ubuntu / Debian
+
+System webview, compiler toolchain and tray libraries come from apt
+
+```bash
+sudo apt update
+sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file \
+  libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Node 18+ via [nvm](https://github.com/nvm-sh/nvm), fnm or nodejs.org
+
+### Fedora
+
+```bash
+sudo dnf install webkit2gtk4.1-devel openssl-devel curl wget file \
+  libxdo-devel libayatana-appindicator-gtk3-devel librsvg2-devel
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+### Arch
+
+```bash
+sudo pacman -S webkit2gtk-4.1 base-devel curl wget file openssl \
+  libappindicator-gtk3 librsvg
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+Full per-distro list lives in the [Tauri prerequisites guide](https://tauri.app/start/prerequisites/)
+
+---
+
 ## Getting started
 
 ```bash
 npm install
 npm run dev      # debug run with hot reload
-npm run build    # → stickies.app + .dmg under src-tauri/target/release/bundle
+npm run build    # → iStickies.app + .dmg under src-tauri/target/release/bundle
 ```
 
-Requires Rust 1.97+, Node 18+ and Xcode Command Line Tools on macOS. Notes and settings live in `~/Library/Application Support/com.dmytrofiliurskyi.stickies` (`~/.local/share/stickies` on Linux).
+Notes and settings live in `~/Library/Application Support/com.dmytrofiliurskyi.stickies` (`~/.local/share/stickies` on Linux)
 
 ---
 

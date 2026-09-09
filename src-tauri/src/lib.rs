@@ -757,6 +757,8 @@ pub fn run() {
                 eprintln!("tray init failed: {}", e);
             }
             keep_manager_alive(app.handle());
+            // notes are visible right after launch, nothing stays hidden
+            let _ = show_all_notes(app.handle().clone());
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
