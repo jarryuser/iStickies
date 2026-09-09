@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Note</title>
+    <script src="/vendor/marked.min.js"></script>
+    <script type="module" src="/note.js" defer></script>
+  </head>
+  <body class="note-body">
+    <div class="note" id="note">
+      <span class="pin"></span>
+      <div class="note-bar" data-tauri-drag-region>
+        <span class="dot"></span>
+      </div>
+      <div class="note-text" id="text"></div>
+      <div class="note-foot">
+        <span></span>
+        <span class="grip" id="grip" title="Resize"></span>
+      </div>
+    </div>
+  </body>
+</html>

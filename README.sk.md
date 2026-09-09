@@ -1,0 +1,96 @@
+<div align="center">
+
+# iStickies
+
+**Lepiace poznámky s vim dušou - samostatné pripnuté okná, Markdown náhľad a úpravy vo vlastnom $EDITOR**
+
+[![Tauri](https://img.shields.io/badge/Tauri-2-24C8DB?style=flat-square&logo=tauri&logoColor=white)](https://tauri.app/)
+[![Rust](https://img.shields.io/badge/Rust-1.97-CE412B?style=flat-square&logo=rust&logoColor=white)](https://www.rust-lang.org/)
+[![macOS](https://img.shields.io/badge/macOS-supported-000?style=flat-square&logo=apple&logoColor=white)](#)
+[![Linux](https://img.shields.io/badge/Linux-supported-FCC624?style=flat-square&logo=linux&logoColor=black)](#)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](#license)
+
+[English](README.md) · **Slovenčina** · [Deutsch](README.de.md) · [Українська](README.uk.md) · [Русский](README.ru.md)
+
+</div>
+
+---
+
+## Prehľad
+
+Stickies je malá desktopová aplikácia na lepiace poznámky, ktoré žijú priamo na tapete. Každá poznámka je samostatné bezrámové okno: presuň ho kamkoľvek, zmeň veľkosť za roh a okno zostane pod aplikáciami namiesto plávania navrchu
+
+Úpravy prebiehajú vo vime, nie v textovom poli. Stlač **vim** (alebo dvakrát klikni na poznámku) a poznámka sa otvorí vo tvojom `$EDITOR` vo vlastnom termináli - Ghostty, iTerm2, Alacritty, kitty, WezTerm alebo predvolený Terminal. Ulož súbor a obsah sa do sekundy synchronizuje späť do poznámky, vyrenderovaný ako Markdown
+
+---
+
+## Funkcie
+
+| | Funkcia | Detaily |
+|---|---|---|
+| 📌 | **Pripnutý vzhľad** | Špendlík s vlastnou farbou, papierový tieň, farebné témy poznámok |
+| 🖥️ | **Desktopové okná** | Samostatné okná vždy naspodku, skryté z taskbaru aj Docku |
+| ⌨️ | **Úpravy vo vime** | `$EDITOR` / `$VISUAL` alebo ručné nastavenie, každé `:w` sa synchronizuje |
+| 🖨️ | **Voľba terminálu** | Terminal, iTerm2, Ghostty, Alacritty, kitty, WezTerm, autodetekcia |
+| 📝 | **Markdown náhľad** | Nadpisy, zoznamy, kód, tabuľky, `~~preškrtnuté~~`, offline renderovanie |
+| 🍔 | **Menu bar aplikácia** | Bez ikony v Docku, tray menu s New / Show all / Hide all / Quit |
+| 🖱️ | **Horúce rohy** | Poznámky prežijú macOS Show Desktop vďaka Stationary správaniu okien |
+| 🎨 | **Vzhľad** | Farebné vzorky poznámok, špendlík zap/vyp, výber farby špendlíka |
+
+---
+
+## Technológie
+
+| Vrstva | Nástroj | Prečo |
+|---|---|---|
+| Shell | Tauri 2 | Natívne okná, tray, jediná 2.5MB binárka |
+| Back end | Rust | Úložisko poznámok, vim watcher vlákno, spúšťač terminálov |
+| Front end | Vanilla JS + CSS | Bez frameworku, nula npm závislostí |
+| Markdown | marked 4.3 | Lokálne vendored, funguje offline |
+| Úložisko | JSON súbory | `notes.json` + `settings.json` v app data priečinku |
+
+---
+
+## Začíname
+
+```bash
+npm install
+npm run dev      # debug beh s hot reload
+npm run build    # → stickies.app + .dmg v src-tauri/target/release/bundle
+```
+
+Vyžaduje Rust 1.97+, Node 18+ a Xcode Command Line Tools na macOS. Poznámky a nastavenia ležia v `~/Library/Application Support/com.dmytrofiliurskyi.stickies` (na Linuxe `~/.local/share/stickies`).
+
+---
+
+## Štruktúra projektu
+
+```
+stickies/
+├── src/
+│   ├── index.html / main.js   - okno manažéra: zoznam, farby, nastavenia
+│   ├── note.html / note.js    - okno poznámky: len zobrazenie, drag + resize
+│   ├── styles.css             - papier, špendlík a markdown štýly
+│   └── vendor/marked.min.js   - offline markdown renderer
+├── src-tauri/
+│   ├── src/lib.rs             - príkazy: poznámky, bounds, vim, tray, okná
+│   ├── capabilities/          - Tauri permission sety
+│   ├── tauri.conf.json        - okná, bundle a metadata aplikácie
+│   └── icons/                 - ikony aplikácie a traye
+└── package.json               - tauri / dev / build skripty
+```
+
+---
+
+## Známe obmedzenia
+
+- **Wayland** prenecháva always-on-bottom kompozitoru, poznámky sa môžu správať ako bežné okná
+- **Windows** podpora vim flow je zatiaľ stub, najprv macOS a Linux
+- **Prvé spustenie** je nepodpísané, použi pravý klik → Open alebo zruš quarantine flag
+- **Markdown obrázky** zo siete sa nenačítavajú, renderer je zámerne offline
+
+---
+
+## Licencia
+
+MIT © Dmytro Filiurskyi

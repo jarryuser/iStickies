@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="styles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iStickies</title>
+    <script type="module" src="/main.js" defer></script>
+  </head>
+  <body>
+    <main class="manager">
+      <header class="manager-head">
+        <h1>iStickies</h1>
+        <button id="new-note">+ New</button>
+      </header>
+      <section class="settings">
+        <div class="settings-row">
+          <label for="terminal">Terminal</label>
+          <select id="terminal"></select>
+        </div>
+        <div class="settings-row" id="terminal-custom-row" style="display:none">
+          <label for="terminal-custom">Custom</label>
+          <input id="terminal-custom" placeholder="my-terminal" />
+        </div>
+        <div class="settings-row">
+          <label for="edit-mode">Edit mode</label>
+          <select id="edit-mode">
+            <option value="vim">vim</option>
+            <option value="builtin">built-in</option>
+          </select>
+        </div>
+        <div class="settings-row">
+          <label for="editor">Editor</label>
+          <input id="editor" placeholder="vim (empty = $EDITOR)" />
+        </div>
+        <div class="settings-row">
+          <label for="show-pin">Pin</label>
+          <input type="checkbox" id="show-pin" />
+          <input type="color" id="pin-color" value="#d21f1f" title="Pin color" />
+        </div>
+        <button id="save-settings">Save settings</button>
+        <span id="settings-status" class="settings-status"></span>
+      </section>
+      <p class="hint">All controls live here. Double-click a note to edit with vim or the built-in editor, see settings.</p>
+      <div id="list" class="list"></div>
+      <footer class="manager-foot">
+        <button id="show-all" class="ghost">Show all</button>
+        <button id="hide-all" class="ghost">Hide all</button>
+      </footer>
+    </main>
+  </body>
+</html>
