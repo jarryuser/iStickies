@@ -162,6 +162,26 @@ fn which_candidate(bin: &str) -> bool {
         .unwrap_or(false)
 }
 
+// Real executable for a GUI terminal: CLI in PATH first,
+// then the binary inside the .app bundle. Needed because
+// `open -a --args` drops args for an already running app.
+fn gui_exe(cli: &str, app: &str, exe: &str) -> Option<String> {
+    if which_candidate(cli) {
+        return Some(cli.to_string());
+    }
+    let home = std::env::var("HOME").unwrap_or_default();
+    for dir in [
+        "/Applications".to_string(),
+        format!("{}/Applications", home),
+    ] {
+        let p = format!("{}/{}.app/Contents/MacOS/{}", dir, app, exe);
+        if std::path::Path::new(&p).exists() {
+            return Some(p);
+        }
+    }
+    None
+}
+
 fn open_terminal_macos(app_name: &str, shell_cmd: &str) -> Result<(), String> {
     let name = app_name.trim();
     if name.is_empty() || name == "Terminal" {
@@ -189,30 +209,28 @@ fn open_terminal_macos(app_name: &str, shell_cmd: &str) -> Result<(), String> {
     // GUI terminals need their own exec flag, otherwise they just
     // open a default shell and the editor never starts.
     let lower = name.to_lowercase();
-    let (bins, app, prefix): (Vec<String>, &str, Vec<&str>) = match lower.as_str() {
-        "ghostty" => (vec!["ghostty".to_string()], "Ghostty", vec!["-e"]),
-        "alacritty" => (vec!["alacritty".to_string()], "Alacritty", vec!["-e"]),
-        "kitty" => (vec!["kitty".to_string()], "kitty", vec![]),
-        "wezterm" => (vec!["wezterm".to_string()], "WezTerm", vec!["start", "--"]),
-        "xterm" => (vec!["xterm".to_string()], "XQuartz", vec!["-e"]),
-        _ => (vec![lower.clone()], name, vec!["-e"]),
+    let (cli, app, exe, prefix): (&str, &str, &str, Vec<&str>) = match lower.as_str() {
+        "ghostty" => ("ghostty", "Ghostty", "ghostty", vec!["-e"]),
+        "alacritty" => ("alacritty", "Alacritty", "alacritty", vec!["-e"]),
+        "kitty" => ("kitty", "kitty", "kitty", vec![]),
+        "wezterm" => ("wezterm", "WezTerm", "wezterm", vec!["start", "--"]),
+        "xterm" => ("xterm", "XQuartz", "xterm", vec!["-e"]),
+        _ => (name, name, lower.as_str(), vec!["-e"]),
     };
-    for bin in &bins {
-        if !which_candidate(bin) {
-            continue;
-        }
+    // Prefer the real executable: `open -a --args` silently drops
+    // args when the app is already running, opening a plain shell.
+    if let Some(bin) = gui_exe(cli, app, exe) {
         let mut cmd = std::process::Command::new(bin);
         for a in &prefix {
             cmd.arg(a);
         }
         cmd.arg("sh").arg("-c").arg(shell_cmd);
-        if cmd.spawn().is_ok() {
-            return Ok(());
-        }
+        cmd.spawn().map_err(|e| e.to_string())?;
+        return Ok(());
     }
-    // Last resort: ask Finder to open the .app with the same args.
+    // Last resort: new app instance, a reused one drops --args.
     let mut cmd = std::process::Command::new("open");
-    cmd.args(["-a", app, "--args"]);
+    cmd.args(["-na", app, "--args"]);
     for a in &prefix {
         cmd.arg(a);
     }
