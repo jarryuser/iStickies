@@ -57,6 +57,12 @@ Grab the `.dmg` (macOS) or `.deb` / `.AppImage` (Linux) from [Releases](https://
 
 macOS builds are ad-hoc signed, if the system reports damage run `xattr -cr /Applications/iStickies.app`
 
+If macOS already reports the installed app as damaged, clear the quarantine flag and open it again
+
+```bash
+xattr -cr /Applications/iStickies.app
+```
+
 ---
 
 ## Prerequisites

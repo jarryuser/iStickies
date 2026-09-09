@@ -57,6 +57,12 @@ Stiahni `.dmg` (macOS) alebo `.deb` / `.AppImage` (Linux) z [Releases](https://g
 
 macOS buildy sú ad-hoc podpísané, ak systém hlási poškodenie spusti `xattr -cr /Applications/iStickies.app`
 
+Ak macOS už nainštalovanú aplikáciu hlási ako poškodenú, vyčisti quarantine flag a otvor ju znova
+
+```bash
+xattr -cr /Applications/iStickies.app
+```
+
 ---
 
 ## Predpoklady

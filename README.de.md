@@ -57,6 +57,12 @@ Lade `.dmg` (macOS) oder `.deb` / `.AppImage` (Linux) aus [Releases](https://git
 
 macOS-Builds sind ad-hoc signiert, meldet das System Beschädigung, dann `xattr -cr /Applications/iStickies.app` ausführen
 
+Meldet macOS die installierte App bereits als beschädigt, Quarantine-Flag entfernen und erneut öffnen
+
+```bash
+xattr -cr /Applications/iStickies.app
+```
+
 ---
 
 ## Voraussetzungen

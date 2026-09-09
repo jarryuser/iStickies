@@ -57,6 +57,12 @@ Stickies - маленький застосунок для стікерів, що
 
 macOS-збірки ad-hoc підписані, якщо система каже про пошкодження - виконай `xattr -cr /Applications/iStickies.app`
 
+Якщо macOS вже каже про пошкоджений встановлений застосунок, зніми quarantine-флаг і відкрий знову
+
+```bash
+xattr -cr /Applications/iStickies.app
+```
+
 ---
 
 ## Залежності
