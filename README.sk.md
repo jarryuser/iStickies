@@ -55,7 +55,7 @@ Stickies je malá desktopová aplikácia na lepiace poznámky, ktoré žijú pri
 
 Stiahni `.dmg` (macOS) alebo `.deb` / `.AppImage` (Linux) z [Releases](https://github.com/jarryuser/iStickies/releases)
 
-macOS buildy sú ad-hoc podpísané, pri prvom spustení použi pravý klik → Open
+macOS buildy sú ad-hoc podpísané, ak systém hlási poškodenie spusti `xattr -cr /Applications/iStickies.app`
 
 ---
 
@@ -139,7 +139,7 @@ stickies/
 
 - **Wayland** prenecháva always-on-bottom kompozitoru, poznámky sa môžu správať ako bežné okná
 - **Windows** podpora vim flow je zatiaľ stub, najprv macOS a Linux
-- **Prvé spustenie** je nepodpísané, použi pravý klik → Open alebo zruš quarantine flag
+- **Prvé spustenie** je ad-hoc podpísané, vyčisti quarantine cez `xattr -cr` (viď Inštalácia)
 - **Markdown obrázky** zo siete sa nenačítavajú, renderer je zámerne offline
 
 ---

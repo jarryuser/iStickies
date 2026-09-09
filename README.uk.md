@@ -55,7 +55,7 @@ Stickies - маленький застосунок для стікерів, що
 
 Забери `.dmg` (macOS) або `.deb` / `.AppImage` (Linux) з [Releases](https://github.com/jarryuser/iStickies/releases)
 
-macOS-збірки ad-hoc підписані, при першому запуску відкрий правим кліком → Open
+macOS-збірки ad-hoc підписані, якщо система каже про пошкодження - виконай `xattr -cr /Applications/iStickies.app`
 
 ---
 
@@ -139,7 +139,7 @@ stickies/
 
 - **Wayland** віддає always-on-bottom композитору, нотатки можуть поводитись як звичайні вікна
 - **Windows**-підтримка vim-флоу поки заглушка, спочатку macOS і Linux
-- **Перший запуск** непідписаний, відкрий правим кліком → Open або зніми quarantine-флаг
+- **Перший запуск** ad-hoc підписаний, зніми quarantine через `xattr -cr` (див. Встановлення)
 - **Markdown-зображення** з мережі не вантажаться, рендерер свідомо офлайн
 
 ---

@@ -55,7 +55,7 @@ Editing happens in vim, not in a text field. Press **vim** (or double-click a no
 
 Grab the `.dmg` (macOS) or `.deb` / `.AppImage` (Linux) from [Releases](https://github.com/jarryuser/iStickies/releases)
 
-macOS builds are ad-hoc signed, on first launch use right-click → Open
+macOS builds are ad-hoc signed, if the system reports damage run `xattr -cr /Applications/iStickies.app`
 
 ---
 
@@ -139,7 +139,7 @@ stickies/
 
 - **Wayland** leaves always-on-bottom to the compositor, notes may behave like normal windows
 - **Windows** support for the vim flow is stubbed, macOS and Linux come first
-- **First launch** is unsigned, use right-click → Open or clear the quarantine flag
+- **First launch** is ad-hoc signed, clear quarantine with `xattr -cr` (see Install)
 - **Markdown images** from the network do not load, the renderer is offline by design
 
 ---

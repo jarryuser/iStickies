@@ -55,7 +55,7 @@ Bearbeitet wird in Vim, nicht in einem Textfeld. Drücke **vim** (oder doppelkli
 
 Lade `.dmg` (macOS) oder `.deb` / `.AppImage` (Linux) aus [Releases](https://github.com/jarryuser/iStickies/releases)
 
-macOS-Builds sind ad-hoc signiert, beim Erststart Rechtsklick → Öffnen nutzen
+macOS-Builds sind ad-hoc signiert, meldet das System Beschädigung, dann `xattr -cr /Applications/iStickies.app` ausführen
 
 ---
 
@@ -139,7 +139,7 @@ stickies/
 
 - **Wayland** überlässt Always-on-bottom dem Compositor, Notizen wirken evtl. wie normale Fenster
 - **Windows**-Unterstützung für den Vim-Flow ist vorerst ein Stub, macOS und Linux zuerst
-- **Erststart** ist unsigniert, Rechtsklick → Öffnen oder Quarantine-Flag entfernen
+- **Erststart** ist ad-hoc signiert, Quarantine mit `xattr -cr` entfernen (siehe Installation)
 - **Markdown-Bilder** aus dem Netz laden nicht, der Renderer ist bewusst offline
 
 ---
