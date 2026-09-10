@@ -141,6 +141,31 @@ stickies/
 
 ---
 
+## Roadmap
+
+### Done
+
+- [x] **Desktop windows** - frameless always-on-bottom stickies with drag and corner resize
+- [x] **Vim editing** - `$EDITOR` in your own terminal, every save syncs back
+- [x] **Terminal choice** - auto-detected list plus custom command
+- [x] **Markdown preview** - offline rendering with strikethrough, tables and code
+- [x] **Built-in editor** - inline markdown source editing with Ctrl+Enter
+- [x] **Menu bar app** - tray menu, no Dock icon, red cross hides instead of quitting
+- [x] **Pinned look** - pushpin toggle, pin color, per-note colors
+- [x] **Custom storage** - notes folder moves anywhere with migration
+- [x] **Show Desktop safe** - Stationary windows survive the macOS hot corner
+- [x] **Release CI** - draft releases for macOS and Linux on version tags
+
+### Ideas
+
+- [ ] **Windows support** - vim flow and terminal launch on Windows
+- [ ] **Signed macOS builds** - Developer ID and notarization, no more `xattr`
+- [ ] **Global hotkey** - new note from anywhere without opening the manager
+- [ ] **Autostart** - launch on login with notes restored
+- [ ] **Search** - full-text search across notes from the manager
+
+---
+
 ## Known limitations
 
 - **Wayland** leaves always-on-bottom to the compositor, notes may behave like normal windows

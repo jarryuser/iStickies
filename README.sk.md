@@ -141,6 +141,31 @@ stickies/
 
 ---
 
+## Roadmap
+
+### Hotovo
+
+- [x] **Desktopové okná** - bezrámové always-on-bottom poznámky s dragom a resize rohom
+- [x] **Úpravy vo vime** - `$EDITOR` vo vlastnom termináli, každý save sa synchronizuje
+- [x] **Voľba terminálu** - autodetekovaný zoznam plus vlastný príkaz
+- [x] **Markdown náhľad** - offline renderovanie s preškrtnutím, tabuľkami a kódom
+- [x] **Zabudovaný editor** - inline úpravy markdown zdroja cez Ctrl+Enter
+- [x] **Menu bar aplikácia** - tray menu, bez Dock ikony, červený krížik skryje namiesto quit
+- [x] **Pripnutý vzhľad** - špendlík zap/vyp, farba špendlíka, farby poznámok
+- [x] **Vlastné úložisko** - priečinok poznámok kamkoľvek s migráciou
+- [x] **Show Desktop safe** - Stationary okná prežijú macOS horúci roh
+- [x] **Release CI** - draft releasy pre macOS a Linux na version tagy
+
+### Nápady
+
+- [ ] **Windows podpora** - vim flow a štart terminálu na Windows
+- [ ] **Podpísané macOS buildy** - Developer ID a notarizácia, žiadne `xattr`
+- [ ] **Globálna hotkey** - nová poznámka odkiaľkoľvek bez otvárania manažéra
+- [ ] **Autostart** - štart pri prihlásení s obnovenými poznámkami
+- [ ] **Vyhľadávanie** - fulltext cez poznámky z manažéra
+
+---
+
 ## Známe obmedzenia
 
 - **Wayland** prenecháva always-on-bottom kompozitoru, poznámky sa môžu správať ako bežné okná

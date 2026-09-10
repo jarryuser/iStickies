@@ -141,6 +141,31 @@ stickies/
 
 ---
 
+## Roadmap
+
+### Fertig
+
+- [x] **Desktop-Fenster** - rahmenlose Always-on-bottom-Notizen mit Drag und Eck-Resize
+- [x] **Vim-Bearbeitung** - `$EDITOR` im eigenen Terminal, jedes Save synct zurück
+- [x] **Terminalwahl** - erkannte Liste plus eigenes Kommando
+- [x] **Markdown-Vorschau** - Offline-Rendering mit Durchstreichung, Tabellen und Code
+- [x] **Eingebauter Editor** - Inline-Markdown-Editing mit Ctrl+Enter
+- [x] **Menüleisten-App** - Tray-Menü, kein Dock-Icon, rotes Kreuz versteckt statt quit
+- [x] **Pinnwand-Look** - Pin an/aus, Pin-Farbe, Farben pro Notiz
+- [x] **Eigenes Verzeichnis** - Notizordner beliebig verlegbar mit Migration
+- [x] **Show-Desktop-sicher** - Stationary-Fenster überleben die macOS heiße Ecke
+- [x] **Release-CI** - Draft-Releases für macOS und Linux auf Version-Tags
+
+### Ideen
+
+- [ ] **Windows-Support** - Vim-Flow und Terminal-Start unter Windows
+- [ ] **Signierte macOS-Builds** - Developer ID und Notarisierung, kein `xattr`
+- [ ] **Globaler Hotkey** - neue Notiz von überall ohne Manager-Fenster
+- [ ] **Autostart** - Start bei Login mit wiederhergestellten Notizen
+- [ ] **Suche** - Volltextsuche über Notizen aus dem Manager
+
+---
+
 ## Bekannte Grenzen
 
 - **Wayland** überlässt Always-on-bottom dem Compositor, Notizen wirken evtl. wie normale Fenster
