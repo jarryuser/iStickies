@@ -241,6 +241,16 @@ button.ghost { background: transparent; }
 
 .note-text li { margin: 2px 0; }
 
+.note-text li.task {
+  list-style: none;
+  margin-left: -20px;
+}
+
+.note-text li.task input[type="checkbox"] {
+  margin-right: 6px;
+  accent-color: #0b5cad;
+}
+
 .note-text a { color: #0b5cad; }
 
 .note-text del { color: #777; }

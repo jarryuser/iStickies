@@ -27,6 +27,12 @@ function render(content) {
   }
   if (window.marked && typeof window.marked.parse === "function") {
     textEl.innerHTML = window.marked.parse(src, { breaks: true });
+    textEl.querySelectorAll("li").forEach((li) => {
+      const first = li.firstElementChild;
+      if (first && first.tagName === "INPUT" && first.type === "checkbox") {
+        li.classList.add("task");
+      }
+    });
   } else {
     textEl.textContent = src;
   }
