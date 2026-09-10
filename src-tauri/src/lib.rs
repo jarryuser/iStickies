@@ -133,22 +133,76 @@ fn applescript_escape(s: &str) -> String {
     s.replace('\\', "\\\\").replace('"', "\\\"")
 }
 
+fn is_executable(p: &std::path::Path) -> bool {
+    let m = match std::fs::metadata(p) {
+        Ok(m) => m,
+        Err(_) => return false,
+    };
+    if !m.is_file() {
+        return false;
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        m.permissions().mode() & 0o111 != 0
+    }
+    #[cfg(not(unix))]
+    {
+        true
+    }
+}
+
+// Absolute path of a binary, GUI apps get a bare PATH
+// without brew and friends, so plain names may not run.
+fn find_exe(name: &str) -> Option<String> {
+    if name.contains('/') {
+        return is_executable(std::path::Path::new(name)).then(|| name.to_string());
+    }
+    let mut dirs: Vec<String> = std::env::var("PATH")
+        .unwrap_or_default()
+        .split(':')
+        .map(|s| s.to_string())
+        .collect();
+    for extra in ["/opt/homebrew/bin", "/usr/local/bin", "/opt/local/bin"] {
+        if !dirs.iter().any(|d| d == extra) {
+            dirs.push(extra.to_string());
+        }
+    }
+    dirs.iter()
+        .map(|d| format!("{}/{}", d, name))
+        .find(|p| is_executable(std::path::Path::new(p)))
+}
+
+// Editor as absolute path with flags kept, first hit wins.
+// Terminals like Ghostty run it under login with a bare
+// PATH, so a bare `nvim` dies there while `vim` works.
 fn resolve_editor(override_editor: &str) -> String {
+    let mut cands: Vec<String> = vec![];
     let v = override_editor.trim();
     if !v.is_empty() {
-        return v.to_string();
+        cands.push(v.to_string());
     }
     for key in ["VISUAL", "EDITOR"] {
         if let Ok(v) = std::env::var(key) {
             let v = v.trim().to_string();
             if !v.is_empty() {
-                return v;
+                cands.push(v);
             }
         }
     }
-    for candidate in ["nvim", "vim", "vi", "nano"] {
-        if which_candidate(candidate) {
-            return candidate.to_string();
+    cands.extend(["nvim", "vim", "vi", "nano"].iter().map(|s| s.to_string()));
+    for cand in cands {
+        let mut parts = cand.split_whitespace();
+        let bin = match parts.next() {
+            Some(b) => b,
+            None => continue,
+        };
+        if let Some(abs) = find_exe(bin) {
+            let rest: Vec<&str> = parts.collect();
+            if rest.is_empty() {
+                return abs;
+            }
+            return format!("{} {}", abs, rest.join(" "));
         }
     }
     "vi".to_string()
