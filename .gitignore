@@ -32,3 +32,4 @@ src-tauri/target/release/bundle/
 
 # Huge icon source, the 1024 version is tracked instead
 app-icon.png
+.tmp-write-test
