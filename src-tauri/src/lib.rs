@@ -26,6 +26,8 @@ struct Settings {
     pin_color: String,
     #[serde(default = "edit_mode_default")]
     edit_mode: String,
+    #[serde(default)]
+    data_dir: String,
 }
 
 fn pin_default() -> bool {
@@ -51,6 +53,7 @@ impl Default for Settings {
             show_pin: true,
             pin_color: pin_color_default(),
             edit_mode: edit_mode_default(),
+            data_dir: String::new(),
         }
     }
 }
@@ -82,22 +85,50 @@ fn save_settings_inner(app: &AppHandle, s: &Settings) -> Result<(), String> {
     fs::write(path, data).map_err(|e| e.to_string())
 }
 
-fn store_path(app: &AppHandle) -> Result<PathBuf, String> {
-    let dir = app
-        .path()
-        .app_data_dir()
-        .map_err(|e| e.to_string())?;
+fn expand_dir(raw: &str) -> Result<PathBuf, String> {
+    let t = raw.trim();
+    if t.is_empty() {
+        return Err("empty path".to_string());
+    }
+    let expanded = if t == "~" || t.starts_with("~/") {
+        let home = std::env::var("HOME").map_err(|_| "no HOME".to_string())?;
+        format!("{}{}", home, &t[1..])
+    } else {
+        t.to_string()
+    };
+    let p = PathBuf::from(expanded);
+    if !p.is_absolute() {
+        return Err("path must be absolute".to_string());
+    }
+    Ok(p)
+}
+
+// Notes live in the custom dir when set, settings.json
+// always stays in the default app data dir.
+fn notes_dir(app: &AppHandle) -> Result<PathBuf, String> {
+    let custom = load_settings(app).data_dir;
+    if custom.trim().is_empty() {
+        let dir = app
+            .path()
+            .app_data_dir()
+            .map_err(|e| e.to_string())?;
+        fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
+        return Ok(dir);
+    }
+    let dir = expand_dir(&custom)?;
     fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
-    Ok(dir.join("notes.json"))
+    let probe = dir.join(".write-test");
+    fs::write(&probe, "ok").map_err(|e| e.to_string())?;
+    let _ = fs::remove_file(&probe);
+    Ok(dir)
+}
+
+fn store_path(app: &AppHandle) -> Result<PathBuf, String> {
+    Ok(notes_dir(app)?.join("notes.json"))
 }
 
 fn edit_path(app: &AppHandle, id: &str) -> Result<PathBuf, String> {
-    let dir = app
-        .path()
-        .app_data_dir()
-        .map_err(|e| e.to_string())?;
-    fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
-    Ok(dir.join(format!("edit-{}.md", id)))
+    Ok(notes_dir(app)?.join(format!("edit-{}.md", id)))
 }
 
 fn load_all(app: &AppHandle) -> Vec<Note> {
@@ -529,7 +560,85 @@ fn save_settings(
         show_pin,
         pin_color: c.to_string(),
         edit_mode: mode,
+        data_dir: load_settings(&app).data_dir,
     };
+    save_settings_inner(&app, &s)?;
+    Ok(s)
+}
+
+#[tauri::command]
+fn set_data_dir(app: AppHandle, path: String) -> Result<Settings, String> {
+    let raw = path.trim().to_string();
+    let target: Option<PathBuf> = if raw.is_empty() {
+        None
+    } else {
+        let dir = expand_dir(&raw)?;
+        fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
+        let probe = dir.join(".write-test");
+        fs::write(&probe, "ok").map_err(|e| e.to_string())?;
+        let _ = fs::remove_file(&probe);
+        Some(dir)
+    };
+
+    let current = load_all(&app);
+    let current_file = store_path(&app).ok();
+
+    if let Some(dir) = target {
+        // merge with notes already living there, ours win on conflict
+        let mut merged: Vec<Note> = fs::read_to_string(dir.join("notes.json"))
+            .ok()
+            .and_then(|d| serde_json::from_str(&d).ok())
+            .unwrap_or_default();
+        for n in &current {
+            if let Some(old) = merged.iter_mut().find(|m| m.id == n.id) {
+                *old = n.clone();
+            } else {
+                merged.push(n.clone());
+            }
+        }
+        let data = serde_json::to_string_pretty(&merged).map_err(|e| e.to_string())?;
+        fs::write(dir.join("notes.json"), data).map_err(|e| e.to_string())?;
+        // move pending vim temp files along
+        if let Ok(entries) = fs::read_dir(notes_dir(&app).unwrap_or_default()) {
+            for e in entries.flatten() {
+                let name = e.file_name().to_string_lossy().to_string();
+                if name.starts_with("edit-") && name.ends_with(".md") {
+                    let _ = fs::rename(e.path(), dir.join(&name));
+                }
+            }
+        }
+        if let Some(old) = current_file {
+            if old.parent() != Some(dir.as_path()) {
+                let _ = fs::remove_file(old);
+            }
+        }
+    } else if let Some(old) = current_file {
+        // moving back to default, keep whatever is already there plus ours
+        let def = app
+            .path()
+            .app_data_dir()
+            .map_err(|e| e.to_string())?;
+        fs::create_dir_all(&def).map_err(|e| e.to_string())?;
+        if old.parent() != Some(def.as_path()) {
+            let mut merged: Vec<Note> = fs::read_to_string(def.join("notes.json"))
+                .ok()
+                .and_then(|d| serde_json::from_str(&d).ok())
+                .unwrap_or_default();
+            for n in &current {
+                if let Some(o) = merged.iter_mut().find(|m| m.id == n.id) {
+                    *o = n.clone();
+                } else {
+                    merged.push(n.clone());
+                }
+            }
+            let data = serde_json::to_string_pretty(&merged).map_err(|e| e.to_string())?;
+            fs::write(def.join("notes.json"), data).map_err(|e| e.to_string())?;
+            let _ = fs::remove_file(old);
+        }
+    }
+
+    let mut s = load_settings(&app);
+    s.data_dir = raw;
     save_settings_inner(&app, &s)?;
     Ok(s)
 }
@@ -849,7 +958,8 @@ pub fn run() {
             list_terminals,
             set_color,
             update_content,
-            request_edit
+            request_edit,
+            set_data_dir
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

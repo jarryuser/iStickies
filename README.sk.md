@@ -118,7 +118,7 @@ npm run dev      # debug beh s hot reload
 npm run build    # → iStickies.app + .dmg v src-tauri/target/release/bundle
 ```
 
-Poznámky a nastavenia ležia v `~/Library/Application Support/com.dmytrofiliurskyi.stickies` (na Linuxe `~/.local/share/stickies`)
+Poznámky a nastavenia ležia v `~/Library/Application Support/com.dmytrofiliurskyi.stickies` (na Linuxe `~/.local/share/stickies`), priečinok poznámok presunieš kdekoľvek v nastaveniach
 
 ---
 

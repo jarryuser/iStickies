@@ -118,7 +118,7 @@ npm run dev      # debug-запуск с hot reload
 npm run build    # → iStickies.app + .dmg в src-tauri/target/release/bundle
 ```
 
-Заметки и настройки лежат в `~/Library/Application Support/com.dmytrofiliurskyi.stickies` (на Linux `~/.local/share/stickies`)
+Заметки и настройки лежат в `~/Library/Application Support/com.dmytrofiliurskyi.stickies` (на Linux `~/.local/share/stickies`), папку заметок можно перенести куда угодно в настройках
 
 ---
 

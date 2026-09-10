@@ -6,6 +6,7 @@ const terminalCustomRow = document.getElementById("terminal-custom-row");
 const terminalCustom = document.getElementById("terminal-custom");
 const editorInput = document.getElementById("editor");
 const editModeSel = document.getElementById("edit-mode");
+const dataDirInput = document.getElementById("data-dir");
 const settingsStatus = document.getElementById("settings-status");
 let editMode = "vim";
 const errEl = document.createElement("div");
@@ -168,6 +169,7 @@ async function loadSettings() {
     editorInput.value = settings.editor || "";
     editMode = settings.edit_mode === "builtin" ? "builtin" : "vim";
     editModeSel.value = editMode;
+    dataDirInput.value = settings.data_dir || "";
     document.getElementById("show-pin").checked = settings.show_pin !== false;
     document.getElementById("pin-color").value = settings.pin_color || "#d21f1f";
   } catch (e) {
@@ -202,6 +204,17 @@ document.getElementById("save-settings").onclick = async () => {
   }
 };
 
+document.getElementById("move-storage").onclick = async () => {
+  try {
+    const s = await invoke("set_data_dir", { path: dataDirInput.value || "" });
+    dataDirInput.value = s.data_dir || "";
+    settingsStatus.textContent = "moved";
+    setTimeout(() => { settingsStatus.textContent = ""; }, 2000);
+    refresh();
+  } catch (e) {
+    showError(e);
+  }
+};
 document.getElementById("new-note").onclick = async () => {
   try {
     await invoke("create_note", { content: "" });

@@ -118,7 +118,7 @@ npm run dev      # debug run with hot reload
 npm run build    # → iStickies.app + .dmg under src-tauri/target/release/bundle
 ```
 
-Notes and settings live in `~/Library/Application Support/com.dmytrofiliurskyi.stickies` (`~/.local/share/stickies` on Linux)
+Notes and settings live in `~/Library/Application Support/com.dmytrofiliurskyi.stickies` (`~/.local/share/stickies` on Linux), the notes folder can move anywhere via settings
 
 ---
 
