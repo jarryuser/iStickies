@@ -827,20 +827,51 @@ fn request_edit(app: AppHandle, id: String) -> Result<(), String> {
 
 fn show_manager(app: &AppHandle) {
     if let Some(w) = app.get_webview_window("main") {
+        move_manager_to_active_space(&w);
         let _ = w.show();
         let _ = w.set_focus();
         return;
     }
-    let _ = WebviewWindowBuilder::new(app, "main", WebviewUrl::App("index.html".into()))
-        .title("iStickies")
-        .inner_size(380.0, 620.0)
-        .build();
+    if let Ok(w) =
+        WebviewWindowBuilder::new(app, "main", WebviewUrl::App("index.html".into()))
+            .title("iStickies")
+            .inner_size(380.0, 620.0)
+            .build()
+    {
+        move_manager_to_active_space(&w);
+        let _ = w.show();
+        let _ = w.set_focus();
+        keep_manager_alive(app);
+    }
 }
+
+// Manager must open on the Space the user is on right now,
+// not pull them back to the Space where it was first opened.
+// MoveToActiveSpace moves the window to the active Space when
+// it is shown, so no Space switch happens.
+#[cfg(target_os = "macos")]
+fn move_manager_to_active_space(window: &tauri::WebviewWindow) {
+    use objc2_app_kit::{NSWindow, NSWindowCollectionBehavior};
+    let ptr = match window.ns_window() {
+        Ok(p) => p as *mut NSWindow,
+        Err(_) => return,
+    };
+    if ptr.is_null() {
+        return;
+    }
+    let win: &NSWindow = unsafe { &*ptr };
+    let cur = win.collectionBehavior();
+    win.setCollectionBehavior(cur | NSWindowCollectionBehavior::MoveToActiveSpace);
+}
+
+#[cfg(not(target_os = "macos"))]
+fn move_manager_to_active_space(_window: &tauri::WebviewWindow) {}
 
 // Red cross hides the manager instead of closing it,
 // so the tray icon keeps working and the app stays alive.
 fn keep_manager_alive(app: &AppHandle) {
     if let Some(w) = app.get_webview_window("main") {
+        move_manager_to_active_space(&w);
         let win = w.clone();
         w.on_window_event(move |event| {
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
