@@ -204,6 +204,32 @@ fn find_exe(name: &str) -> Option<String> {
         .find(|p| is_executable(std::path::Path::new(p)))
 }
 
+// GUI editors live in .app bundles, not in PATH:
+// /Applications/Neovide.app/Contents/MacOS/neovide for `neovide`.
+fn find_app_bundle_exe(bin: &str) -> Option<String> {
+    let home = std::env::var("HOME").unwrap_or_default();
+    let mut app_names = vec![bin.to_string()];
+    let mut chars = bin.chars();
+    if let Some(first) = chars.next() {
+        let cap: String = first.to_uppercase().collect::<String>() + chars.as_str();
+        if cap != bin {
+            app_names.push(cap);
+        }
+    }
+    for dir in [
+        "/Applications".to_string(),
+        format!("{}/Applications", home),
+    ] {
+        for app in &app_names {
+            let p = format!("{}/{}.app/Contents/MacOS/{}", dir, app, bin);
+            if is_executable(std::path::Path::new(&p)) {
+                return Some(p);
+            }
+        }
+    }
+    None
+}
+
 // Editor as absolute path with flags kept, first hit wins.
 // Terminals like Ghostty run it under login with a bare
 // PATH, so a bare `nvim` dies there while `vim` works.
@@ -228,7 +254,7 @@ fn resolve_editor(override_editor: &str) -> String {
             Some(b) => b,
             None => continue,
         };
-        if let Some(abs) = find_exe(bin) {
+        if let Some(abs) = find_exe(bin).or_else(|| find_app_bundle_exe(bin)) {
             let rest: Vec<&str> = parts.collect();
             if rest.is_empty() {
                 return abs;
@@ -324,8 +350,41 @@ fn open_terminal_macos(app_name: &str, shell_cmd: &str) -> Result<(), String> {
     Ok(())
 }
 
+fn editor_bin_name(editor: &str) -> String {
+    editor
+        .split_whitespace()
+        .next()
+        .unwrap_or("")
+        .rsplit('/')
+        .next()
+        .unwrap_or("")
+        .to_lowercase()
+}
+
+// GUI editors run as their own windows, wrapping them in a
+// terminal would just flash a shell that immediately exits.
+fn is_gui_editor(editor: &str) -> bool {
+    matches!(editor_bin_name(editor).as_str(), "neovide")
+}
+
 fn open_in_terminal(editor: &str, file: &PathBuf, terminal_pref: &str) -> Result<(), String> {
     let file_str = file.to_string_lossy().to_string();
+
+    // GUI editors (neovide) open directly, no terminal needed.
+    // The file watcher in edit_in_vim still picks up every save.
+    if is_gui_editor(editor) {
+        let mut parts = editor.split_whitespace();
+        if let Some(bin) = parts.next() {
+            let mut cmd = std::process::Command::new(bin);
+            for a in parts {
+                cmd.arg(a);
+            }
+            cmd.arg(&file_str);
+            cmd.spawn().map_err(|e| e.to_string())?;
+            return Ok(());
+        }
+    }
+
     let shell_cmd = format!("{} {}; exit", editor, shell_escape(&file_str));
 
     #[cfg(target_os = "macos")]
