@@ -1,4 +1,5 @@
 const { invoke } = window.__TAURI__.core;
+import { emojify } from "./emoji.js";
 
 const listEl = document.getElementById("list");
 const terminalSel = document.getElementById("terminal");
@@ -55,7 +56,7 @@ async function openNoteWindow(note) {
 }
 
 function preview(text) {
-  const t = (text || "").trim();
+  const t = emojify((text || "").trim());
   if (!t) return "(empty)";
   return t.length > 80 ? t.slice(0, 80) + "..." : t;
 }

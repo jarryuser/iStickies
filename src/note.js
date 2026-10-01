@@ -1,6 +1,7 @@
 const { invoke } = window.__TAURI__.core;
 const { getCurrentWindow } = window.__TAURI__.window;
 const { listen } = window.__TAURI__.event;
+import { emojify, emojifyElement } from "./emoji.js";
 
 const id = new URLSearchParams(location.search).get("id");
 const textEl = document.getElementById("text");
@@ -27,6 +28,7 @@ function render(content) {
   }
   if (window.marked && typeof window.marked.parse === "function") {
     textEl.innerHTML = window.marked.parse(src, { breaks: true });
+    emojifyElement(textEl);
     textEl.querySelectorAll("li").forEach((li) => {
       const first = li.firstElementChild;
       if (first && first.tagName === "INPUT" && first.type === "checkbox") {
@@ -34,7 +36,7 @@ function render(content) {
       }
     });
   } else {
-    textEl.textContent = src;
+    textEl.textContent = emojify(src);
   }
 }
 
